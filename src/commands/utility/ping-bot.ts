@@ -5,47 +5,49 @@ import axios from 'axios';
 export default {
   data: new SlashCommandBuilder()
     .setName('ping')
-    .setDescription('Check bot latency')
+    .setDescription('Cek latensi bot dan API')
     .addBooleanOption(option =>
       option.setName('hidden')
-      .setDescription('Make the response hidden')
+      .setDescription('Sembunyikan balasan ini')
       .setRequired(false)
     ),
   cooldown: 5,
   async execute(interaction: ChatInputCommandInteraction) {
     const hidden = interaction.options.getBoolean('hidden') || false;
     
-    // 1. Measure Discord Interaction Latency
+    // 1. Ukur Latensi Interaksi Discord
     const start = Date.now();
     await interaction.deferReply({ ephemeral: hidden });
-    const apiLatency = Date.now() - start;
+    const botLatency = Date.now() - start;
 
     const wsLatency = interaction.client.ws.ping;
     
-    // 2. Measure External API Latency & Get Data in one go
-    let externalApiLatency = 0;
-    let externalUptime = 'N/A';
+    // 2. Ambil data dari API External
+    let apiLatencyFromData = 'N/A';
+    let apiUptimeFromData = 'N/A';
     
     try {
-      const apiStart = Date.now();
       const response = await axios.get('https://nvlabs.my.id/health');
-      externalApiLatency = Date.now() - apiStart;
-      externalUptime = response.data.uptime || 'Unknown';
+      // Mengambil data sesuai instruksi Anda
+      apiLatencyFromData = response.data.latency; // Mengambil dari data.latency
+      apiUptimeFromData = response.data.uptime;   // Mengambil dari data.uptime
     } catch (error) {
-      externalApiLatency = -1; // Indicates error
+      console.error('Gagal mengambil data API:', error);
+      apiLatencyFromData = 'Error';
+      apiUptimeFromData = 'Error';
     }
     
-    // 3. Format Bot Uptime (process.uptime is in seconds)
+    // 3. Format Uptime Bot (detik ke format yang lebih rapi jika perlu)
     const botUptime = Math.floor(process.uptime());
     
     const embed = new EmbedBuilder()
       .setColor(0x00ff00)
       .setTitle('🏓 Pong!')
-      .setDescription('Bot latency statistics')
+      .setDescription('Statistik latensi sistem saat ini')
       .addFields(
         {
           name: 'Bot Latency',
-          value: `\`${apiLatency}ms\``,
+          value: `\`${botLatency}ms\``,
           inline: true
         },
         {
@@ -59,17 +61,17 @@ export default {
           inline: true
         },
         {
-          name: 'External API',
-          value: `\`${externalApiLatency === -1 ? 'Down' : externalApiLatency + 'ms'}\``,
+          name: 'API Latency',
+          value: `\`${apiLatencyFromData}\`ms`,
           inline: true
         },
         {
           name: 'API Uptime',
-          value: `\`${externalUptime}\``,
+          value: `\`${apiUptimeFromData}\``,
           inline: true
         }
       )
-      .setFooter({ text: `Requested by ${interaction.user.tag}` })
+      .setFooter({ text: `Diminta oleh ${interaction.user.tag}`, iconURL: 'https://nvlabs.my.id/files/my.png' })
       .setTimestamp();
     
     await interaction.editReply({ embeds: [embed] });
