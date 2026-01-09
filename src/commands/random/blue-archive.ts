@@ -10,7 +10,7 @@ import { logger } from '../../utils/logger';
 
 export default {
   data: new SlashCommandBuilder()
-    .setName('rba')
+    .setName('random-bluearchive')
     .setDescription('Get random Blue Archive character image'),
   cooldown: 3,
   

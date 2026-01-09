@@ -1,4 +1,3 @@
-// src/commands/search/yts.ts (Fixed)
 import { 
   SlashCommandBuilder, 
   ChatInputCommandInteraction, 
@@ -18,7 +17,7 @@ interface YouTubeVideo {
   title: string;
   channel: string;
   duration: string;
-  views: string | number; // Bisa string atau number
+  views: string | number;
   uploaded: string;
   imageUrl: string;
   url: string;
@@ -29,7 +28,7 @@ interface YouTubeVideo {
 
 export default {
   data: new SlashCommandBuilder()
-    .setName('yts')
+    .setName('youtube-search')
     .setDescription('Search YouTube videos')
     .addStringOption(option =>
       option.setName('query')

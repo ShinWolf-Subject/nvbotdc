@@ -10,7 +10,7 @@ import { logger } from '../../utils/logger';
 
 export default {
   data: new SlashCommandBuilder()
-    .setName('rloli')
+    .setName('random-loli')
     .setDescription('Get random Loli character image'),
   cooldown: 3,
   

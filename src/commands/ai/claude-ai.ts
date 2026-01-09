@@ -1,7 +1,6 @@
-// src/commands/ai/claude.ts (Simple Version)
-import { 
-  SlashCommandBuilder, 
-  ChatInputCommandInteraction, 
+import {
+  SlashCommandBuilder,
+  ChatInputCommandInteraction,
   EmbedBuilder
 } from 'discord.js';
 import axios from 'axios';
@@ -14,9 +13,9 @@ export default {
     .setDescription('Chat with Claude AI')
     .addStringOption(option =>
       option.setName('msg')
-        .setDescription('Your message to Claude')
-        .setRequired(true)
-        .setMaxLength(1000)
+      .setDescription('Your message to Claude')
+      .setRequired(true)
+      .setMaxLength(5000)
     ),
   cooldown: 8,
   
@@ -29,7 +28,7 @@ export default {
       logger.info(`Claude request: "${message}"`, 'CLAUDE');
       
       const encodedMsg = encodeURIComponent(message);
-      const apiUrl = `https://nvlabs.my.id/nv/ai/claude?msg=${encodedMsg}`;
+      const apiUrl = `https://nvlabs.my.id/nv/ai/claude?msg=${message}`;
       
       const response = await axios.get(apiUrl, { timeout: 20000 });
       const apiData = response.data;
@@ -43,16 +42,27 @@ export default {
       
       const claudeData = apiData.data;
       
-      // Format response
+      const description = claudeData.response.length > 5000 ?
+        claudeData.response.substring(0, 5000) + "···" :
+        claudeData.response;
+      
       const embed = new EmbedBuilder()
         .setColor(0x10b981)
-        .setTitle('🤖 Claude AI Response')
-        .setDescription(claudeData.response)
+        .setTitle('AI Response')
+        .setDescription(description)
         .addFields(
-          { name: '🔢 Tokens', value: claudeData.estimated_tokens.toString(), inline: true },
-          { name: '📏 Length', value: `${claudeData.response_length} chars`, inline: true }
-        )
-        .setFooter({ 
+        {
+          name: 'Tokens',
+          value: claudeData.estimated_tokens.toString(),
+          inline: true
+        },
+        {
+          name: 'Length',
+          value: `${claudeData.response_length} chars`,
+          inline: true
+        })
+        .setFooter(
+        {
           text: `Requested by ${interaction.user.username}`,
           iconURL: 'https://nvlabs.my.id/files/my.png'
         })

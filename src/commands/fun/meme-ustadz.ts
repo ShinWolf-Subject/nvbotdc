@@ -10,7 +10,7 @@ import { logger } from '../../utils/logger';
 
 export default {
   data: new SlashCommandBuilder()
-    .setName('uqc')
+    .setName('ustadz-quote')
     .setDescription('Buat meme ustadz dengan teks custom')
     .addStringOption(option =>
       option.setName('text')

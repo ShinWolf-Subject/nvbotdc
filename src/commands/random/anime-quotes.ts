@@ -10,7 +10,7 @@ import { logger } from '../../utils/logger';
 
 export default {
   data: new SlashCommandBuilder()
-    .setName('aqc')
+    .setName('anime-quote')
     .setDescription('Get random anime quotes')
     .addIntegerOption(option =>
       option.setName('count')
@@ -49,7 +49,7 @@ export default {
         .setColor(0xff6bc9)
         .setTitle(`🌸 ${selectedQuotes.length} Random Anime Quotes`)
         .setDescription('Berikut adalah beberapa quotes anime acak untukmu:')
-        .setFooter({ text: 'Powered by NvLabs API' })
+        .setFooter({ text: 'Powered by NvLabs' })
         .setTimestamp();
       
       // Tambahkan setiap quote sebagai field
