@@ -28,7 +28,7 @@ export default {
       logger.info(`Claude request: "${message}"`, 'CLAUDE');
       
       const encodedMsg = encodeURIComponent(message);
-      const apiUrl = `https://nvlabs.my.id/nv/ai/claude?msg=${message}`;
+      const apiUrl = `https://api.vandecim.web.id/nv/ai/claude?msg=${message}`;
       
       const response = await axios.get(apiUrl, { timeout: 20000 });
       const apiData = response.data;
